@@ -5,16 +5,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.helianto.core.config.HeliantoServiceConfig;
-import org.helianto.core.sender.NotificationSender;
-import org.helianto.core.sender.UserConfirmationSender;
 import org.helianto.core.test.TestDataSourceConfig;
-import org.helianto.install.service.EntityInstallStrategy;
-import org.helianto.network.service.RootQueryService;
-import org.helianto.seed.AbstractContextConfig;
-import org.helianto.seed.OAuth2ClientConfig;
-import org.helianto.seed.SecurityWebConfig;
-import org.helianto.sendgrid.config.SendGridConfig;
-import org.helianto.user.service.UserQueryService;
+import org.helianto.security.config.CryptoConfig;
 import org.hibernate.ejb.HibernatePersistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -38,9 +30,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @Import({TestDataSourceConfig.class
 		, HeliantoServiceConfig.class
-		, SecurityWebConfig.class
-		, OAuth2ClientConfig.class
-		, SendGridConfig.class})
+		, CryptoConfig.class})
 @ComponentScan(
 		basePackages = {"com.iservport.*.service"})
 @EnableJpaRepositories(
@@ -48,7 +38,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 				"com.iservport.*.repository", "org.helianto.*.repository"
 		})
 @PropertySource("classpath:/test.properties")
-public class TestConfig extends AbstractContextConfig {
+public class TestConfig  {
 	
 	@Inject
 	private DataSource dataSource;
@@ -82,25 +72,4 @@ public class TestConfig extends AbstractContextConfig {
 		return new BCryptPasswordEncoder();
 	}
 	
-	/**
-	 * Notification sender.
-	 */
-	@Bean
-	public NotificationSender notificationSender() {
-		return new NotificationSender();
-	}
-	
-	/**
-	 * User confirmation sender.
-	 */
-	@Bean
-	public UserConfirmationSender userConfirmationSender() {
-		return new UserConfirmationSender(env);
-	}
-	
-	@Bean
-	public EntityInstallStrategy entityInstallStrategy(){
-		return null;
-	}
-	    
 }
